@@ -1,0 +1,164 @@
+const http = require("http");
+const fs = require("fs");
+const qs = require("querystring");
+
+
+function readUsersFile() {
+  try {
+    const data = fs.readFileSync('users.json', 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Error reading users file:', err);
+    return [];
+  }
+}
+
+function writeUsersFile(users) {
+  try {
+    fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
+  } catch (err) {
+    console.error('Error writing users file:', err);
+  }
+}
+
+let users = readUsersFile();
+
+function hashPassword(password) {
+  return password;
+}
+
+const server = http.createServer((req, res) => {
+    let { method } = req;
+
+    if (method == "GET") {
+        if (req.url === "/") {
+            fs.readFile("users.json", "utf8", (err, data) => {
+                if (err) {
+                    console.log(err);
+                    res.writeHead(500);
+                    res.end("Server Error");
+                } else {
+                    console.log(data);
+                    res.writeHead(200, { "Content-Type": "application/json" });
+                    res.end(data);
+                }
+            });
+        } else if (req.url == "/allmovies") {
+            fs.readFile("allmovies.html", "utf8", (err, data) => {
+                if (err) {
+                    res.writeHead(500);
+                    res.end("Server Error");
+                } else {
+                    console.log("sending allmovies.html file");
+                    res.end(data);
+                }
+            });
+        } else if (req.url === "/ratemovie") {
+            fs.readFile("ratemovie.html", "utf8", (err, data) => {
+                if (err) {
+                    res.writeHead(500);
+                    res.end("Server Error");
+                } else {
+                    console.log("sending ratemovie.html file");
+                    res.end(data);
+                }
+            });
+        } else if (req.url === "/login") {
+            fs.readFile("login.html", "utf8", (err, data) => {
+                if (err) {
+                    res.writeHead(500);
+                    res.end("Server Error");
+                } else {
+                    console.log("sending login.html file");
+                    res.end(data);
+                }
+            });
+        } else if (req.url === "/register") {
+            fs.readFile("register.html", "utf8", (err, data) => {
+                if (err) {
+                    res.writeHead(500);
+                    res.end("Server Error");
+                } else {
+                    console.log("sending register.html file");
+                    res.end(data);
+                }
+            });
+        } else {
+            console.log(req.url);  
+            res.writeHead(404);
+            res.end("Not Found");
+        }
+    } else if (method === "POST") {
+        if (req.url === "/ratemovie") {
+            console.log("inside /ratemovie route and post request");
+            let body = "";
+            req.on("data", (chunk) => {
+                body += chunk.toString();
+            });
+            req.on("end", () => {
+                let readdata = fs.readFileSync("movies.json", "utf-8");
+                console.log(readdata);
+
+                if (!readdata) {
+                    fs.writeFileSync("movies.json", JSON.stringify([]));
+                } else {
+                    let jsonData = JSON.parse(readdata);
+                    let movies = [...jsonData];
+                    console.log(movies);
+
+                    let convertedBody = qs.decode(body);
+                    movies.push(convertedBody);
+                    console.log(convertedBody);
+                    fs.writeFile("movies.json", JSON.stringify(movies), (err) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log("movie rating inserted successfully");
+                        }
+                    });
+                }
+
+                res.writeHead(200, { "Content-Type": "text/html" });
+                res.end("Rating submitted successfully!");
+            });
+        } else if (req.url === "/register") {
+            let body = "";
+            req.on("data", (chunk) => {
+                body += chunk.toString();
+            });
+            req.on("end", () => {
+                const { username, password } = qs.decode(body);
+                const hashedPassword = hashPassword(password);
+                users.push({ username, password: hashedPassword });
+                writeUsersFile(users);
+                res.writeHead(302, { 'Location': '/login' });
+                res.end();
+            });
+        } else if (req.url === "/login") {
+            let body = "";
+            req.on("data", (chunk) => {
+                body += chunk.toString();
+            });
+            req.on("end", () => {
+                const { username, password } = qs.decode(body);
+                const hashedPassword = hashPassword(password);
+                const user = users.find(u => u.username === username && u.password === hashedPassword);
+                if (user) {
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: true }));
+                } else {
+                    res.writeHead(401, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, message: "Invalid credentials" }));
+                }
+            });
+        } else {
+            res.writeHead(404);
+            res.end("Not Found in post request");
+        }
+    }
+});
+
+server.listen(3000, () => {
+    console.log("Server listening on port 3000");
+});
+
