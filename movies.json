@@ -1,1 +1,72 @@
-[{"title":"Inception","director":"Christopher Nolan","year":"2010","rating":"5","review":"A mind-bending thriller with stunning visuals and a gripping story."},{"title":"The Shawshank Redemption","director":"Frank Darabont","year":"1994","rating":"5","review":"An inspiring story of hope and friendship."},{"title":"The Dark Knight","director":"Christopher Nolan","year":"2008","rating":"5","review":"A masterful superhero movie with iconic performances and deep themes."},{"title":"Pulp Fiction","director":"Quentin Tarantino","year":"1994","rating":"4","review":"A stylish and unconventional narrative with memorable dialogues."},{"title":"Forrest Gump","director":"Robert Zemeckis","year":"1994","rating":"5","review":"An emotional and heartwarming journey through an extraordinary life."},{"title":"Interstellar","director":"Christopher Nolan","year":"2014","rating":"5","review":"An epic sci-fi film exploring space, love, and survival."},{"title":"The Matrix","director":"The Wachowskis","year":"1999","rating":"5","review":"A groundbreaking film that redefined sci-fi and action genres."},{"title":"Parasite","director":"Bong Joon Ho","year":"2019","rating":"5","review":"A brilliant and thought-provoking social satire with unexpected twists."},{"title":"Avengers: Endgame","director":"Anthony Russo, Joe Russo","year":"2019","rating":"4","review":"A thrilling conclusion to the Marvel Cinematic Universe's Infinity Saga."},{"title":"Gladiator","director":"Ridley Scott","year":"2000","rating":"5","review":"A powerful historical epic with an outstanding performance by Russell Crowe."}]
+[
+	{
+		"title": "Inception",
+		"director": "Christopher Nolan",
+		"year": "2010",
+		"rating": "5",
+		"review": "A mind-bending thriller with stunning visuals and a gripping story."
+	},
+	{
+		"title": "The Shawshank Redemption",
+		"director": "Frank Darabont",
+		"year": "1994",
+		"rating": "5",
+		"review": "An inspiring story of hope and friendship."
+	},
+	{
+		"title": "The Dark Knight",
+		"director": "Christopher Nolan",
+		"year": "2008",
+		"rating": "5",
+		"review": "A masterful superhero movie with iconic performances and deep themes."
+	},
+	{
+		"title": "Pulp Fiction",
+		"director": "Quentin Tarantino",
+		"year": "1994",
+		"rating": "4",
+		"review": "A stylish and unconventional narrative with memorable dialogues."
+	},
+	{
+		"title": "Forrest Gump",
+		"director": "Robert Zemeckis",
+		"year": "1994",
+		"rating": "5",
+		"review": "An emotional and heartwarming journey through an extraordinary life."
+	},
+	{
+		"title": "Interstellar",
+		"director": "Christopher Nolan",
+		"year": "2014",
+		"rating": "5",
+		"review": "An epic sci-fi film exploring space, love, and survival."
+	},
+	{
+		"title": "The Matrix",
+		"director": "The Wachowskis",
+		"year": "1999",
+		"rating": "5",
+		"review": "A groundbreaking film that redefined sci-fi and action genres."
+	},
+	{
+		"title": "Parasite",
+		"director": "Bong Joon Ho",
+		"year": "2019",
+		"rating": "5",
+		"review": "A brilliant and thought-provoking social satire with unexpected twists."
+	},
+	{
+		"title": "Avengers: Endgame",
+		"director": "Anthony Russo, Joe Russo",
+		"year": "2019",
+		"rating": "4",
+		"review": "A thrilling conclusion to the Marvel Cinematic Universe's Infinity Saga."
+	},
+	{
+		"title": "Gladiator",
+		"director": "Ridley Scott",
+		"year": "2000",
+		"rating": "5",
+		"review": "A powerful historical epic with an outstanding performance by Russell Crowe."
+	}
+]

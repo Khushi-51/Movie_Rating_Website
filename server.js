@@ -27,8 +27,17 @@ const server = http.createServer((req, res) => {
 
     if (method == "GET") {
         if (req.url === "/") {
-            res.writeHead(302, { 'Location': '/allmovies' });
-            res.end();
+            fs.readFile("users.json", "utf8", (err, data) => {
+                if (err) {
+                    console.log(err);
+                    res.writeHead(500);
+                    res.end("Server Error");
+                } else {
+                    console.log(data);
+                    res.writeHead(200, { "Content-Type": "application/json" });
+                    res.end(data);
+                }
+            });
         } else if (req.url === "/movies") {
             fs.readFile("movies.json", "utf8", (err, data) => {
                 if (err) {
@@ -91,18 +100,6 @@ const server = http.createServer((req, res) => {
                     res.end(data);
                 }
             });
-        } else if (req.url.startsWith("/placeholder.svg")) {
-            const params = new URLSearchParams(req.url.split('?')[1]);
-            const width = params.get('width') || '100';
-            const height = params.get('height') || '100';
-            const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100%" height="100%" fill="#ddd"/>
-                <text x="50%" y="50%" font-family="Arial" font-size="14" fill="#666" dominant-baseline="middle" text-anchor="middle">
-                    ${width}x${height}
-                </text>
-            </svg>`;
-            res.writeHead(200, { 'Content-Type': 'image/svg+xml' });
-            res.end(svg);
         } else {
             console.log(req.url);  
             res.writeHead(404);
