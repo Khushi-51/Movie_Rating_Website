@@ -8,11 +8,6 @@
         body {
     font-family: Arial, sans-serif;
     margin: 0 auto;
-    background-image: url('./loginbg2.png'); /* Update the path if needed */
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    min-height: 100vh; /* Ensures the background image covers the viewport */
 }
 
         main{
@@ -104,31 +99,23 @@
             </div>
         </main>
     <script>
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
-            })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = '/login';
-                } else {
-                    throw new Error('Registration failed');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('errorMessage').textContent = 'Registration failed. Please try again.';
-            });
-        });
+        document.getElementById('registerForm').onsubmit = function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `username=${username}&password=${password}`,
+    })
+    .then(response => response.ok ? window.location.href = '/login' : Promise.reject())
+    .catch(() => {
+        document.getElementById('errorMessage').textContent = 'Registration failed. Please try again.';
+    });
+};
+
     </script>
 </body>
 </html>

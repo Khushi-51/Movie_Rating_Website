@@ -79,36 +79,35 @@
         <tbody id="movieTableBody">
         </tbody>
     </table>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        window.onload = function() {
             if (!localStorage.getItem('loggedIn')) {
                 window.location.href = '/login';
                 return;
             }
-
-            fetch("http://localhost:3000")
-                .then((response) => response.json())
-                .then((data) => {
+            fetch("/movies")
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
                     console.log(data);
-                    const tableBody = document.getElementById('movieTableBody');
+                    var tableBody = document.getElementById('movieTableBody');
                     
-                    data.forEach(movie => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${movie.title}</td>
-                            <td>${movie.director}</td>
-                            <td>${movie.year}</td>
-                            <td>${movie.rating}</td>
-                            <td>${movie.review}</td>
-                        `;
+                    data.forEach(function(movie) {
+                        var row = document.createElement('tr');
+                        row.innerHTML = 
+                            '<td>' + movie.title + '</td>' +
+                            '<td>' + movie.director + '</td>' +
+                            '<td>' + movie.year + '</td>' +
+                            '<td>' + movie.rating + '</td>' +
+                            '<td>' + movie.review + '</td>';
                         tableBody.appendChild(row);
                     });
                 })
-                .catch((error) => {
+                .catch(function(error) {
                     console.error('Error:', error);
                 });
-        });
+        };
     </script>
     <div style="margin-top: 20px; text-align: center;">
         <a href="/login" onclick="localStorage.removeItem('loggedIn');">Logout</a>

@@ -2,37 +2,35 @@ const http = require("http");
 const fs = require("fs");
 const qs = require("querystring");
 
-
 function readUsersFile() {
-  try {
-    const data = fs.readFileSync('users.json', 'utf8');
-    return JSON.parse(data);
-  } catch (err) {
-    console.error('Error reading users file:', err);
-    return [];
-  }
+    try {
+        const data = fs.readFileSync('users.json', 'utf8');
+        return JSON.parse(data);
+    } catch (err) {
+        console.error('Error reading users file:', err);
+        return [];
+    }
 }
 
 function writeUsersFile(users) {
-  try {
-    fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
-  } catch (err) {
-    console.error('Error writing users file:', err);
-  }
+    try {
+        fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
+    } catch (err) {
+        console.error('Error writing users file:', err);
+    }
 }
 
 let users = readUsersFile();
-
-function hashPassword(password) {
-  return password;
-}
 
 const server = http.createServer((req, res) => {
     let { method } = req;
 
     if (method == "GET") {
         if (req.url === "/") {
-            fs.readFile("users.json", "utf8", (err, data) => {
+            res.writeHead(302, { 'Location': '/allmovies' });
+            res.end();
+        } else if (req.url === "/movies") {
+            fs.readFile("movies.json", "utf8", (err, data) => {
                 if (err) {
                     console.log(err);
                     res.writeHead(500);
@@ -83,6 +81,28 @@ const server = http.createServer((req, res) => {
                     res.end(data);
                 }
             });
+        } else if (req.url === "/navbar") {
+            fs.readFile("navbar.html", "utf8", (err, data) => {
+                if (err) {
+                    res.writeHead(500);
+                    res.end("Server Error");
+                } else {
+                    console.log("sending navbar.html file");
+                    res.end(data);
+                }
+            });
+        } else if (req.url.startsWith("/placeholder.svg")) {
+            const params = new URLSearchParams(req.url.split('?')[1]);
+            const width = params.get('width') || '100';
+            const height = params.get('height') || '100';
+            const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100%" height="100%" fill="#ddd"/>
+                <text x="50%" y="50%" font-family="Arial" font-size="14" fill="#666" dominant-baseline="middle" text-anchor="middle">
+                    ${width}x${height}
+                </text>
+            </svg>`;
+            res.writeHead(200, { 'Content-Type': 'image/svg+xml' });
+            res.end(svg);
         } else {
             console.log(req.url);  
             res.writeHead(404);
@@ -127,10 +147,28 @@ const server = http.createServer((req, res) => {
                 body += chunk.toString();
             });
             req.on("end", () => {
-                const { username, password } = qs.decode(body);
-                const hashedPassword = hashPassword(password);
-                users.push({ username, password: hashedPassword });
-                writeUsersFile(users);
+                let readdata = fs.readFileSync("users.json", "utf-8");
+                console.log(readdata);
+
+                if (!readdata) {
+                    fs.writeFileSync("users.json", JSON.stringify([]));
+                } else {
+                    let jsonData = JSON.parse(readdata);
+                    let users = [...jsonData];
+                    console.log(users);
+
+                    let convertedbody = qs.decode(body);
+                    users.push(convertedbody);
+                    console.log(convertedbody);
+                    fs.writeFile("users.json", JSON.stringify(users), (err) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log("userdata inserted successfully");
+                        }
+                    });
+                }
+
                 res.writeHead(302, { 'Location': '/login' });
                 res.end();
             });
@@ -141,8 +179,8 @@ const server = http.createServer((req, res) => {
             });
             req.on("end", () => {
                 const { username, password } = qs.decode(body);
-                const hashedPassword = hashPassword(password);
-                const user = users.find(u => u.username === username && u.password === hashedPassword);
+                const users = readUsersFile();
+                const user = users.find(u => u.username === username && u.password === password);
                 if (user) {
                     res.writeHead(200, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ success: true }));

@@ -11,9 +11,6 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            background-image: url("/loginbg2.png") !important;
-            background-repeat: no-repeat;
-            background-size: cover;
         }
         main{
             padding: 20px 20px;
@@ -103,33 +100,31 @@
     </div>
     </main>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    localStorage.setItem('loggedIn', 'true');
-                    window.location.href = '/allmovies';
-                } else {
-                    document.getElementById('errorMessage').textContent = data.message || 'Login failed. Please try again.';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
-            });
-        });
+        document.getElementById('loginForm').onsubmit = function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `username=${username}&password=${password}`,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            localStorage.setItem('loggedIn', 'true');
+            window.location.href = '/allmovies';
+        } else {
+            document.getElementById('errorMessage').textContent = data.message || 'Login failed. Please try again.';
+        }
+    })
+    .catch(() => {
+        document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
+    });
+};
+
     </script>
 </body>
 </html>
