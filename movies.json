@@ -68,5 +68,12 @@
 		"year": "2000",
 		"rating": "5",
 		"review": "A powerful historical epic with an outstanding performance by Russell Crowe."
+	},
+	{
+		"title": "3 idiots",
+		"director": "Rajkumar Hirani",
+		"year": "2011",
+		"rating": "5",
+		"review": "ALL IS WELLLLLL"
 	}
 ]
